@@ -1,0 +1,27 @@
+Sub ClearData()
+	Dim ws As Variant
+	Dim row As Long
+	
+	For Each ws In Array(Sheet1.Name, ..., SheetN.Name)
+		row = CalculateLastRow(Sheets(ws))
+		If row > 1 Then
+			Sheets(ws).Rows("2:" & row).Delete
+		End If
+	Next ws
+End Sub
+
+Function CalculateLastRow(sheet as Worksheet)
+	With sheet
+		If Application.WorksheetFunction.CountA(.Cells) <> 0 Then
+			CalculateLastRow = .Cells.Find(What:="*", _
+			after:=.Range("A1"), _
+			Lookat:=xlPart, _
+			LookIn:=xlFormulas, _
+			SearchOrder:=xlByRows, _
+			SearchDirection:=xlPrevious, _
+			MatchCase:=False).row
+		Else
+			CalculateLastRow = 1
+		End If
+	End With
+End Function
